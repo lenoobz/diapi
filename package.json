@@ -1,0 +1,23 @@
+{
+  "name": "diapi",
+  "version": "0.0.0",
+  "description": "BxMon API aid util",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.bm:bxmoninc/diapi.git"
+  },
+  "keywords": [
+    "BxMon",
+    "API",
+    "aid",
+    "helper",
+    "enhancer",
+    "utility"
+  ],
+  "author": "BxMon",
+  "license": "MIT"
+}
