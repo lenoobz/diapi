@@ -1,0 +1,128 @@
+import createDiapi from '../src/diapi';
+import { MODES, DELAY, CLIENTS } from '../src/consts/constants';
+import { getUserDetailHandler } from './mock-data/fake.data';
+import axios from 'axios';
+
+describe('Mix modes test', () => {
+  describe('Fake and Axios client', () => {
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.MIX,
+        fake: {
+          delay: DELAY,
+          endpoints: {
+            '/api/v1/getUserDetail': getUserDetailHandler
+          }
+        },
+        real: {
+          client: CLIENTS.AXIOS,
+          axios: {
+            instance: axios,
+            accessToken: null,
+            baseURL: 'https://private-6a9c9d-diapi.apiary-mock.com'
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('GET | object', async() => {
+      const resp = await api.get('/api/v1/getUserDetail', {});
+      expect(resp).toStrictEqual({
+        id: '123',
+        email: 'abcdef@example.com',
+        firstName: 'Tester#1',
+        lastName: 'User',
+        profilePic: 'https://www.example.com/profile/tester001.jpg'
+      });
+    });
+
+    it('GET | array', async() => {
+      const resp = await api.get('/api/v1/getUserDetails', {});
+      expect(resp).toStrictEqual([
+        {
+          id: '123',
+          email: 'abcdef@example.com',
+          firstName: 'Tester#1',
+          lastName: 'User',
+          profilePic: 'https://www.example.com/profile/tester001.jpg'
+        },
+        {
+          id: '124',
+          email: 'abcdeg@example.com',
+          firstName: 'Tester#2',
+          lastName: 'User',
+          profilePic: 'https://www.example.com/profile/tester002.jpg'
+        }
+      ]);
+    });
+
+    it('GET | object with null config', async() => {
+      const resp = await api.get('/api/v1/getUserDetail');
+      expect(resp).toStrictEqual({
+        id: '123',
+        email: 'abcdef@example.com',
+        firstName: 'Tester#1',
+        lastName: 'User',
+        profilePic: 'https://www.example.com/profile/tester001.jpg'
+      });
+    });
+
+    it('Get | throw', async() => {
+      await expect(api.get('/api/v1/pathNotExisted', {})).rejects.toThrow();
+    });
+
+    it('Get | with params', async() => {
+      const resp = await api.get('/api/v1/getUserDetails', {
+        params: { uid: '123' }
+      });
+      expect(resp).toStrictEqual({
+        id: '123',
+        email: 'abcdef@example.com',
+        firstName: 'Tester#1',
+        lastName: 'User',
+        profilePic: 'https://www.example.com/profile/tester001.jpg'
+      });
+    });
+
+    it('Get | with array params', async() => {
+      const resp = await api.get('/api/v1/getUserDetails', {
+        params: { uid: ['123', '124'] }
+      });
+      expect(resp).toStrictEqual([
+        {
+          id: '123',
+          email: 'abcdef@example.com',
+          firstName: 'Tester#1',
+          lastName: 'User',
+          profilePic: 'https://www.example.com/profile/tester001.jpg'
+        },
+        {
+          id: '124',
+          email: 'abcdeg@example.com',
+          firstName: 'Tester#2',
+          lastName: 'User',
+          profilePic: 'https://www.example.com/profile/tester002.jpg'
+        }
+      ]);
+    });
+
+    it('Post | Happy path', async() => {});
+
+    it('Put | Happy path', async() => {});
+
+    it('Patch | Happy path', async() => {});
+
+    it('Head | Happy path', async() => {});
+
+    it('Options | Happy path', async() => {});
+  });
+});
