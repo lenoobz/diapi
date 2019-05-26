@@ -7,7 +7,8 @@
     "build": "NODE_ENV=production webpack",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch test/*.test.js"
+    "test:watch": "jest --watch tests/*.test.js",
+    "coveralls": "jest --coverage && cat ./tests/coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.6",
+    "coveralls": "^3.0.3",
     "eslint": "^5.16.0",
     "eslint-plugin-jest": "^22.6.4",
     "jest": "^24.8.0",
