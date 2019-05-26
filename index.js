@@ -1,5 +1,3 @@
-function diapi() {
-  return 'Diapi placeholder';
-}
+import diapi from './src/diapi';
 
-module.export = diapi;
+export default diapi;
