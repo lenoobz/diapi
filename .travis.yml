@@ -1,6 +1,11 @@
 language: node_js
 node_js:
   - "node"
+branches:
+  only:
+  - master
+  - dev
 script:
   - npm run build
   - npm test
+  - npm run coveralls
