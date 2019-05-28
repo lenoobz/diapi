@@ -43,6 +43,7 @@ Fake.prototype.post = function post(url /* , configs */) {
       }
     }, delay);
   });
+  
 };
 
 Fake.prototype.put = function put() {

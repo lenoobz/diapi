@@ -108,7 +108,16 @@ describe('Real client test', () => {
       ]);
     });
 
-    it('Post | Happy path', async() => {});
+    it('Post | Happy path', async() => {
+      const resp = await api.post('/api/v1/projects', {
+        id: '123',
+        email: 'abcdef@example.com',
+        firstName: 'Tester#1',
+        lastName: 'User',
+        profilePic: 'https://www.example.com/profile/tester001.jpg'
+      }); 
+      expect(resp).toStrictEqual([{}]); 
+    });
 
     it('Put | Happy path', async() => {});
 

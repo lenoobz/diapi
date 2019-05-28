@@ -9,7 +9,7 @@ func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	r.GET("/api/v1/getUserDetail", func(c *gin.Context) {
+	r.GET("/api/v1/getUserDetail", func(c * gin.Context) {
 		c.JSON(200, gin.H{
 			"id": "123",
 			"email": "abcdef@example.com",
