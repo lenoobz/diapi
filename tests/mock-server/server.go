@@ -3,7 +3,23 @@ package main
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"encoding/json"
+	"io/ioutil"
+	"fmt"
 )
+
+type User struct {
+
+	Id int 
+	Email string
+	FirstName string
+	LastName string
+	ProfilePic string
+
+}
+
+var users[] User
+
 
 func main() {
 	r := gin.Default()
@@ -61,6 +77,39 @@ func main() {
 			"profilePic": "https://www.example.com/profile/tester001.jpg",
 		})
 
+	})
+
+	r.POST("/api/v1/addUserDetails", func(c * gin.Context){
+
+		var user User
+		b, _ := ioutil.ReadAll(c.Request.Body)
+		err := json.Unmarshal(b, &user)
+
+		if (err != nil) {
+			fmt.Println(err); 
+		} 
+		
+		users = append(users, user)
+		message := user.FirstName + " " + user.LastName + " is added"
+
+		c.JSON(200, message)
+	})
+
+	r.PUT("api/v1/UserDetails", func(c * gin.Context) {
+		var user User
+		b, _ := ioutil.ReadAll(c.Request.Body)
+		err := json.Unmarshal(b, &user)
+
+		if (err2 != nil){
+			fmt.Println(err)
+		}
+
+		if (err != nil) {
+			fmt.Println(err); 
+		} 
+		
+		message := user.FirstName + " " + user.LastName + " details are modified!"
+		c.JSON(200, message)
 	})
 
 	r.Run(":5555")

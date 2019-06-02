@@ -15,7 +15,8 @@ describe('Real client test', () => {
           axios: {
             instance: axios,
             accessToken: null,
-            baseURL: 'https://private-6a9c9d-diapi.apiary-mock.com'
+            // baseURL: 'https://private-6a9c9d-diapi.apiary-mock.com'
+            baseURL: 'http://localhost:5555'
           }
         }
       };
@@ -88,7 +89,7 @@ describe('Real client test', () => {
 
     it('Get | with array params', async() => {
       const resp = await api.get('/api/v1/getUserDetails', {
-        params: { uid: ['123', '124'] }
+        params: { UID: ['123', '124'] }
       });
       expect(resp).toStrictEqual([
         {
@@ -109,17 +110,26 @@ describe('Real client test', () => {
     });
 
     it('Post | Happy path', async() => {
-      const resp = await api.post('/api/v1/projects', {
-        id: '123',
-        email: 'abcdef@example.com',
-        firstName: 'Tester#1',
-        lastName: 'User',
-        profilePic: 'https://www.example.com/profile/tester001.jpg'
+      const resp = await api.post('/api/v1/addUserDetails', {
+        Id: '123',
+        Email: 'abcdef@example.com',
+        FirstName: 'Tester#1',
+        LastName: 'User',
+        ProfilePic: 'https://www.example.com/profile/tester001.jpg'
       }); 
-      expect(resp).toStrictEqual([{}]); 
+      expect(resp).toStrictEqual("Tester#1 User is added"); 
     });
 
-    it('Put | Happy path', async() => {});
+
+    it('Put | Happy path', async() => {
+      const resp = await api.put('/api/v1/UserDetails', {params: {UID: '123'}}, {
+        Email: 'abcdef@example.com',
+        FirstName: 'Tester#1',
+        LastName: 'User',
+        ProfilePic: 'https://www.example.com/profile/tester001.jpg'
+      })
+      expect(resp).toStrictEqual("Tester#1 User details are modified!")
+    });
 
     it('Patch | Happy path', async() => {});
 
