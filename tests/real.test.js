@@ -128,10 +128,12 @@ describe('Real client test', () => {
         LastName: 'User',
         ProfilePic: 'https://www.example.com/profile/tester001.jpg'
       })
-      expect(resp).toStrictEqual("Tester#1 User details are modified!")
+      expect(resp).toStrictEqual("Tester#1 User details are updated!")
     });
 
-    it('Patch | Happy path', async() => {});
+    it('Patch | Happy path', async() => {
+
+    });
 
     it('Head | Happy path', async() => {});
 

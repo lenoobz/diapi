@@ -100,15 +100,11 @@ func main() {
 		b, _ := ioutil.ReadAll(c.Request.Body)
 		err := json.Unmarshal(b, &user)
 
-		if (err2 != nil){
-			fmt.Println(err)
-		}
-
 		if (err != nil) {
 			fmt.Println(err); 
 		} 
 		
-		message := user.FirstName + " " + user.LastName + " details are modified!"
+		message := user.FirstName + " " + user.LastName + " details are updated!"
 		c.JSON(200, message)
 	})
 
