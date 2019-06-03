@@ -43,12 +43,28 @@ Axios.prototype.get = async function get(url, configs = {}) {
   }
 };
 
-Axios.prototype.post = function post() {
-  throw new Error('Not yet implemented');
+Axios.prototype.post = async function post(url, data = {}) {
+    try {
+      const resp = await this.axios.post(url, data); 
+      return resp.data ? resp.data : resp; 
+    } catch (e) {
+      this.errorHandler(e, GENERIC_ERROR_MESSAGE.POST); 
+      return null; 
+    }
 };
 
-Axios.prototype.put = function put() {
-  throw new Error('Not yet implemented');
+Axios.prototype.put = async function put(url,configs, data) {
+  try {
+    const params = getParamConfigs(configs);
+    const resp = await this.axios.put(url, {
+      ...data,
+      ...params
+    })
+    return resp.data ? resp.data : resp;
+  } catch (e) {
+    this.errorHandler(e, "Error Message - PUT");
+    return null; 
+  }
 };
 
 Axios.prototype.patch = function path() {
