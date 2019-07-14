@@ -1,9 +1,14 @@
+/**
+ * @jest-environment node
+ */
+
+import { CLIENTS, MODES } from '../src/consts/constants';
+
 import axios from 'axios';
 import createDiapi from '../src/diapi';
-import { MODES, CLIENTS } from '../src/consts/constants';
 
-describe('Real client test', () => {
-  describe('GET | Axios client', () => {
+describe('Real client test suite', () => {
+  describe('Real with Axios | GET requests', () => {
     // Applies only to tests in this describe block
     let api = null;
     let opts = null;
@@ -15,7 +20,7 @@ describe('Real client test', () => {
           axios: {
             instance: axios,
             accessToken: null,
-            baseURL: 'https://private-6a9c9d-diapi.apiary-mock.com'
+            baseURL: 'https://diapi-mock-server.herokuapp.com'
           }
         }
       };
@@ -27,95 +32,72 @@ describe('Real client test', () => {
       opts = null;
     });
 
-    it('GET | object', async() => {
-      const resp = await api.get('/api/v1/getUserDetail', {});
+    it('GET | empty config object', async() => {
+      const resp = await api.get('/api/v1/users', {});
       expect(resp).toStrictEqual({
-        id: '123',
-        email: 'abcdef@example.com',
-        firstName: 'Tester#1',
-        lastName: 'User',
-        profilePic: 'https://www.example.com/profile/tester001.jpg'
+        users: [
+          {
+            id: 0,
+            firstname: 'Dev 0',
+            lastname: 'Test',
+            fullname: 'Dev 0 Test',
+            email: 'dev0@test.com',
+            profilePic: 'http://test.com/dev0/profile.jpg',
+            createAt: '2017-08-30T13:35:00Z',
+            isActive: true
+          }
+        ]
       });
     });
 
     it('GET | object with null config', async() => {
-      const resp = await api.get('/api/v1/getUserDetail');
+      const resp = await api.get('/api/v1/users');
       expect(resp).toStrictEqual({
-        id: '123',
-        email: 'abcdef@example.com',
-        firstName: 'Tester#1',
-        lastName: 'User',
-        profilePic: 'https://www.example.com/profile/tester001.jpg'
+        users: [
+          {
+            id: 0,
+            firstname: 'Dev 0',
+            lastname: 'Test',
+            fullname: 'Dev 0 Test',
+            email: 'dev0@test.com',
+            profilePic: 'http://test.com/dev0/profile.jpg',
+            createAt: '2017-08-30T13:35:00Z',
+            isActive: true
+          }
+        ]
       });
     });
 
-    it('GET | array', async() => {
-      const resp = await api.get('/api/v1/getUserDetails', {});
-      expect(resp).toStrictEqual([
-        {
-          id: '123',
-          email: 'abcdef@example.com',
-          firstName: 'Tester#1',
-          lastName: 'User',
-          profilePic: 'https://www.example.com/profile/tester001.jpg'
-        },
-        {
-          id: '124',
-          email: 'abcdeg@example.com',
-          firstName: 'Tester#2',
-          lastName: 'User',
-          profilePic: 'https://www.example.com/profile/tester002.jpg'
-        }
-      ]);
+    it('GET | throw with empty config object', async() => {
+      await expect(api.get('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making a GET request'
+      );
     });
 
-    it('Get | throw', async() => {
-      await expect(api.get('/api/v1/pathNotExisted', {})).rejects.toThrow();
+    it('GET | throw with null config object', async() => {
+      await expect(api.get('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making a GET request'
+      );
     });
+  });
 
-    it('Get | with params', async() => {
-      const resp = await api.get('/api/v1/getUserDetails', {
-        params: { uid: '123' }
-      });
-      expect(resp).toStrictEqual({
-        id: '123',
-        email: 'abcdef@example.com',
-        firstName: 'Tester#1',
-        lastName: 'User',
-        profilePic: 'https://www.example.com/profile/tester001.jpg'
-      });
-    });
+  describe('Real with Axios | POST requests', () => {
+    it('POST | Happy path', async() => {});
+  });
 
-    it('Get | with array params', async() => {
-      const resp = await api.get('/api/v1/getUserDetails', {
-        params: { uid: ['123', '124'] }
-      });
-      expect(resp).toStrictEqual([
-        {
-          id: '123',
-          email: 'abcdef@example.com',
-          firstName: 'Tester#1',
-          lastName: 'User',
-          profilePic: 'https://www.example.com/profile/tester001.jpg'
-        },
-        {
-          id: '124',
-          email: 'abcdeg@example.com',
-          firstName: 'Tester#2',
-          lastName: 'User',
-          profilePic: 'https://www.example.com/profile/tester002.jpg'
-        }
-      ]);
-    });
+  describe('Real with Axios | PUT requests', () => {
+    it('PUT | Happy path', async() => {});
+  });
 
-    it('Post | Happy path', async() => {});
+  describe('Real with Axios | PATCH requests', () => {
+    it('PATCH | Happy path', async() => {});
+  });
 
-    it('Put | Happy path', async() => {});
+  describe('Real with Axios | HEAD requests', () => {
+    it('HEAD | Happy path', async() => {});
+  });
 
-    it('Patch | Happy path', async() => {});
-
-    it('Head | Happy path', async() => {});
-
-    it('Options | Happy path', async() => {});
+  describe('Real with Axios | OPTIONS requests', () => {
+    it('OPTIONS | Happy path', async() => {});
   });
 });
