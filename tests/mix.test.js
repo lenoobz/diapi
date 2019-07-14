@@ -1,10 +1,14 @@
+/**
+ * @jest-environment node
+ */
+
 import createDiapi from '../src/diapi';
 import { MODES, DELAY, CLIENTS } from '../src/consts/constants';
-import { getUserDetailHandler } from './mock-data/fake.data';
 import axios from 'axios';
+import * as Fake from './mock-data/fake.data';
 
-describe('Mix modes test', () => {
-  describe('Fake and Axios client', () => {
+describe('Mix modes test suite', () => {
+  describe('Mix with Axios | GET requests', () => {
     // Applies only to tests in this describe block
     let api = null;
     let opts = null;
@@ -14,7 +18,7 @@ describe('Mix modes test', () => {
         fake: {
           delay: DELAY,
           endpoints: {
-            '/api/v1/getUserDetail': getUserDetailHandler
+            '/api/v1/users': Fake.getAllUsersHandler
           }
         },
         real: {
@@ -22,7 +26,7 @@ describe('Mix modes test', () => {
           axios: {
             instance: axios,
             accessToken: null,
-            baseURL: 'https://private-6a9c9d-diapi.apiary-mock.com'
+            baseURL: 'https://diapi-mock-server.herokuapp.com'
           }
         }
       };
@@ -34,95 +38,50 @@ describe('Mix modes test', () => {
       opts = null;
     });
 
-    it('GET | object', async() => {
-      const resp = await api.get('/api/v1/getUserDetail', {});
+    it('GET | empty config object', async() => {
+      const resp = await api.get('/api/v1/users', {});
       expect(resp).toStrictEqual({
-        id: '123',
-        email: 'abcdef@example.com',
-        firstName: 'Tester#1',
-        lastName: 'User',
-        profilePic: 'https://www.example.com/profile/tester001.jpg'
+        users: [Fake.data.userTest0, Fake.data.userTest1, Fake.data.userTest2]
       });
     });
 
-    it('GET | array', async() => {
-      const resp = await api.get('/api/v1/getUserDetails', {});
-      expect(resp).toStrictEqual([
-        {
-          id: '123',
-          email: 'abcdef@example.com',
-          firstName: 'Tester#1',
-          lastName: 'User',
-          profilePic: 'https://www.example.com/profile/tester001.jpg'
-        },
-        {
-          id: '124',
-          email: 'abcdeg@example.com',
-          firstName: 'Tester#2',
-          lastName: 'User',
-          profilePic: 'https://www.example.com/profile/tester002.jpg'
-        }
-      ]);
-    });
-
-    it('GET | object with null config', async() => {
-      const resp = await api.get('/api/v1/getUserDetail');
+    it('GET | null config object', async() => {
+      const resp = await api.get('/api/v1/users');
       expect(resp).toStrictEqual({
-        id: '123',
-        email: 'abcdef@example.com',
-        firstName: 'Tester#1',
-        lastName: 'User',
-        profilePic: 'https://www.example.com/profile/tester001.jpg'
+        users: [Fake.data.userTest0, Fake.data.userTest1, Fake.data.userTest2]
       });
     });
 
-    it('Get | throw', async() => {
-      await expect(api.get('/api/v1/pathNotExisted', {})).rejects.toThrow();
+    it('GET | throw with empty config object', async() => {
+      await expect(api.get('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making a GET request'
+      );
     });
 
-    it('Get | with params', async() => {
-      const resp = await api.get('/api/v1/getUserDetails', {
-        params: { uid: '123' }
-      });
-      expect(resp).toStrictEqual({
-        id: '123',
-        email: 'abcdef@example.com',
-        firstName: 'Tester#1',
-        lastName: 'User',
-        profilePic: 'https://www.example.com/profile/tester001.jpg'
-      });
+    it('GET | throw with null config object', async() => {
+      await expect(api.get('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making a GET request'
+      );
     });
+  });
 
-    it('Get | with array params', async() => {
-      const resp = await api.get('/api/v1/getUserDetails', {
-        params: { uid: ['123', '124'] }
-      });
-      expect(resp).toStrictEqual([
-        {
-          id: '123',
-          email: 'abcdef@example.com',
-          firstName: 'Tester#1',
-          lastName: 'User',
-          profilePic: 'https://www.example.com/profile/tester001.jpg'
-        },
-        {
-          id: '124',
-          email: 'abcdeg@example.com',
-          firstName: 'Tester#2',
-          lastName: 'User',
-          profilePic: 'https://www.example.com/profile/tester002.jpg'
-        }
-      ]);
-    });
+  describe('Mix with Axios | POST requests', () => {
+    it('POST | Happy path', async() => {});
+  });
 
-    it('Post | Happy path', async() => {});
+  describe('Mix with Axios | PUT requests', () => {
+    it('PUT | Happy path', async() => {});
+  });
 
-    it('Put | Happy path', async() => {});
+  describe('Mix with Axios | PATCH requests', () => {
+    it('PATCH | Happy path', async() => {});
+  });
 
-    it('Patch | Happy path', async() => {});
+  describe('Mix with Axios | HEAD requests', () => {
+    it('HEAD | Happy path', async() => {});
+  });
 
-    it('Head | Happy path', async() => {});
-
-    it('Options | Happy path', async() => {});
+  describe('Mix with Axios | OPTIONS requests', () => {
+    it('OPTIONS | Happy path', async() => {});
   });
 });

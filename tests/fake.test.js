@@ -1,14 +1,9 @@
 import createDiapi from '../src/diapi';
 import { MODES, DELAY } from '../src/consts/constants';
-import {
-  getUserDetailHandler,
-  getUserDetailsHandler,
-  getUserDetailsByIdHandler,
-  getUserDetailsByIdsHandler
-} from './mock-data/fake.data';
+import * as Fake from './mock-data/fake.data';
 
-describe('Fake modes test', () => {
-  describe('Fake client', () => {
+describe('Fake modes test suite', () => {
+  describe('Fake | GET requests', () => {
     // Applies only to tests in this describe block
     let api = null;
     let opts = null;
@@ -18,10 +13,11 @@ describe('Fake modes test', () => {
         fake: {
           delay: DELAY,
           endpoints: {
-            '/api/v1/getUserDetail': getUserDetailHandler,
-            '/api/v1/getUserDetails': getUserDetailsHandler,
-            '/api/v1/getUserDetails?uid=123': getUserDetailsByIdHandler,
-            '/api/v1/getUserDetails?uid=123&uid=124': getUserDetailsByIdsHandler
+            '/api/v1/users': Fake.getAllUsersHandler,
+            '/api/v1/users/1': Fake.getUserByIdHandler,
+            '/api/v1/users?uid=0': Fake.getUserByIdHandler,
+            '/api/v1/users?uid=0&uid=1': Fake.getUsersByIdsHandler,
+            '/api/v1/users/register': Fake.registerUserHandler
           }
         }
       };
@@ -33,97 +29,66 @@ describe('Fake modes test', () => {
       opts = null;
     });
 
-    it('GET | object', async() => {
-      const resp = await api.get('/api/v1/getUserDetail', {});
+    it('GET | empty config object', async() => {
+      const resp = await api.get('/api/v1/users', {});
       expect(resp).toStrictEqual({
-        id: '123',
-        email: 'abcdef@example.com',
-        firstName: 'Tester#1',
-        lastName: 'User',
-        profilePic: 'https://www.example.com/profile/tester001.jpg'
+        users: [Fake.data.userTest0, Fake.data.userTest1, Fake.data.userTest2]
       });
     });
 
-    it('GET | object with null config', async() => {
-      const resp = await api.get('/api/v1/getUserDetail');
+    it('GET | null config object', async() => {
+      const resp = await api.get('/api/v1/users');
       expect(resp).toStrictEqual({
-        id: '123',
-        email: 'abcdef@example.com',
-        firstName: 'Tester#1',
-        lastName: 'User',
-        profilePic: 'https://www.example.com/profile/tester001.jpg'
+        users: [Fake.data.userTest0, Fake.data.userTest1, Fake.data.userTest2]
       });
     });
 
-    it('GET | array', async() => {
-      const resp = await api.get('/api/v1/getUserDetails', {});
-      expect(resp).toStrictEqual([
-        {
-          id: '123',
-          email: 'abcdef@example.com',
-          firstName: 'Tester#1',
-          lastName: 'User',
-          profilePic: 'https://www.example.com/profile/tester001.jpg'
-        },
-        {
-          id: '124',
-          email: 'abcdeg@example.com',
-          firstName: 'Tester#2',
-          lastName: 'User',
-          profilePic: 'https://www.example.com/profile/tester002.jpg'
-        }
-      ]);
-    });
-
-    it('Get | throw', async() => {
+    it('GET | throw with empty config object', async() => {
       await expect(api.get('/api/v1/pathNotExisted', {})).rejects.toThrow(
         'No handler provided'
       );
     });
 
-    it('Get | with params', async() => {
-      const resp = await api.get('/api/v1/getUserDetails', {
-        params: { uid: '123' }
+    it('GET | throw with null config object', async() => {
+      await expect(api.get('/api/v1/pathNotExisted')).rejects.toThrow(
+        'No handler provided'
+      );
+    });
+
+    it('GET | with params', async() => {
+      const resp = await api.get('/api/v1/users', {
+        params: { uid: '0' }
+      });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.userTest1 });
+    });
+
+    it('GET | with array params', async() => {
+      const resp = await api.get('/api/v1/users', {
+        params: { uid: ['0', '1'] }
       });
       expect(resp).toStrictEqual({
-        id: '123',
-        email: 'abcdef@example.com',
-        firstName: 'Tester#1',
-        lastName: 'User',
-        profilePic: 'https://www.example.com/profile/tester001.jpg'
+        users: [Fake.data.userTest0, Fake.data.userTest1]
       });
     });
+  });
 
-    it('Get | with array params', async() => {
-      const resp = await api.get('/api/v1/getUserDetails', {
-        params: { uid: ['123', '124'] }
-      });
-      expect(resp).toStrictEqual([
-        {
-          id: '123',
-          email: 'abcdef@example.com',
-          firstName: 'Tester#1',
-          lastName: 'User',
-          profilePic: 'https://www.example.com/profile/tester001.jpg'
-        },
-        {
-          id: '124',
-          email: 'abcdeg@example.com',
-          firstName: 'Tester#2',
-          lastName: 'User',
-          profilePic: 'https://www.example.com/profile/tester002.jpg'
-        }
-      ]);
-    });
+  describe('Fake | POST requests', () => {
+    it('POST | Happy path', async() => {});
+  });
 
-    it('Post | Happy path', async() => {});
+  describe('Fake | PUT requests', () => {
+    it('PUT | Happy path', async() => {});
+  });
 
-    it('Put | Happy path', async() => {});
+  describe('Fake | PATCH requests', () => {
+    it('PATCH | Happy path', async() => {});
+  });
 
-    it('Patch | Happy path', async() => {});
+  describe('Fake | HEAD requests', () => {
+    it('HEAD | Happy path', async() => {});
+  });
 
-    it('Head | Happy path', async() => {});
-
-    it('Options | Happy path', async() => {});
+  describe('Fake | OPTIONS requests', () => {
+    it('OPTIONS | Happy path', async() => {});
   });
 });
