@@ -59,7 +59,7 @@ describe('Fake modes test suite', () => {
       const resp = await api.get('/api/v1/users', {
         params: { uid: '0' }
       });
-      expect(resp).toStrictEqual({ userDetails: Fake.data.userTest1 });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.userTest0 });
     });
 
     it('GET | with array params', async() => {

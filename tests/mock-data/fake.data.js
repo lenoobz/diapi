@@ -27,8 +27,18 @@ const data = {
     firstname: 'Dev 2',
     lastname: 'Test',
     fullname: 'Dev 2 Test',
-    email: 'dev1@test.com',
+    email: 'dev2@test.com',
     profilePic: 'http://test.com/dev2/profile.jpg',
+    createAt: '2017-08-30T13:35:00Z',
+    isActive: true
+  },
+  userTest3: {
+    id: 3,
+    firstname: 'Dev 3',
+    lastname: 'Test',
+    fullname: 'Dev 3 Test',
+    email: 'dev3@test.com',
+    profilePic: 'http://test.com/dev3/profile.jpg',
     createAt: '2017-08-30T13:35:00Z',
     isActive: true
   }
@@ -39,7 +49,7 @@ const data = {
  ******************************************************************************/
 const getUserByIdHandler = () => {
   return {
-    userDetails: data.userTest1
+    userDetails: data.userTest0
   };
 };
 

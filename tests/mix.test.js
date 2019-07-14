@@ -5,6 +5,7 @@
 import createDiapi from '../src/diapi';
 import { MODES, DELAY, CLIENTS } from '../src/consts/constants';
 import axios from 'axios';
+import qs from 'qs';
 import * as Fake from './mock-data/fake.data';
 
 describe('Mix modes test suite', () => {
@@ -26,7 +27,9 @@ describe('Mix modes test suite', () => {
           axios: {
             instance: axios,
             accessToken: null,
-            baseURL: 'https://diapi-mock-server.herokuapp.com'
+            baseURL: 'https://diapi-mock-server.herokuapp.com',
+            paramsSerializer: (params) =>
+              qs.stringify(params, { arrayFormat: 'repeat' })
           }
         }
       };
@@ -63,6 +66,22 @@ describe('Mix modes test suite', () => {
         'Error occurred while making a GET request'
       );
     });
+
+    it('GET | with params', async() => {
+      const resp = await api.get('/api/v1/users-filter', {
+        params: { uid: '0' }
+      });
+      expect(resp).toStrictEqual({ users: [Fake.data.userTest0] });
+    }, 15000);
+
+    it('GET | with array params', async() => {
+      const resp = await api.get('/api/v1/users-filter', {
+        params: { uid: [0, 1] }
+      });
+      expect(resp).toStrictEqual({
+        users: [Fake.data.userTest0, Fake.data.userTest1]
+      });
+    }, 15000);
   });
 
   describe('Mix with Axios | POST requests', () => {
