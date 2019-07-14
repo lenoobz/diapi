@@ -1,6 +1,6 @@
 # DiAPI
 
-BxMon Inc - Api Aid Util
+Api Aid Util
 
 [![Build Status](https://img.shields.io/travis/bxmon/diapi.svg)](https://travis-ci.org/bxmon/diapi)
 [![Coverage Status](https://coveralls.io/repos/github/bxmon/diapi/badge.svg?branch=dev)](https://coveralls.io/github/bxmon/diapi?branch=dev)
@@ -11,27 +11,27 @@ BxMon Inc - Api Aid Util
 
 ### Config object initial thought
 
-```js
+```json
 {
-  mode: "fake | real | mix",
-  real: {
-    client: "axios | fetch | ajax",
-    axios: {
-      instance: axios,
-      accessToken: null,
-      baseURL: 'https://example.com/api/v1',
-      errorHandler: null
+  "mode": "fake | real | mix",
+  "real": {
+    "client": "axios | fetch | ajax",
+    "axios": {
+      "instance": axios,
+      "accessToken": null,
+      "baseURL": "https://example.com/api/v1",
+      "errorHandler": null
     },
-    fetch: {},
-    ajax: {}
+    "fetch": {},
+    "ajax": {}
   },
-  fake: {
-    delay: 1000,
-    endpoints : {
-      getExampleEndpoint: getExampleHandler,
-      postExampleEndpoint: postExampleHandler,
-      editExampleEndpoint: editExampleHandler,
-      deleteExampleEndPoint: deleteExampleHandler
+  "fake": {
+    "delay": 1000,
+    "endpoints": {
+      "getExampleEndpoint": getExampleHandler,
+      "postExampleEndpoint": postExampleHandler,
+      "editExampleEndpoint": editExampleHandler,
+      "deleteExampleEndPoint": deleteExampleHandler
     }
   }
 }
