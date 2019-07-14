@@ -41,6 +41,16 @@ const data = {
     profilePic: 'http://test.com/dev3/profile.jpg',
     createAt: '2017-08-30T13:35:00Z',
     isActive: true
+  },
+  userTest4: {
+    id: 4,
+    firstname: 'Dev 4',
+    lastname: 'Test',
+    fullname: 'Dev 4 Test',
+    email: 'dev4@test.com',
+    profilePic: 'http://test.com/dev4/profile.jpg',
+    createAt: '2017-08-30T13:35:00Z',
+    isActive: true
   }
 };
 
@@ -71,16 +81,13 @@ const getAllUsersHandler = () => {
 
 const registerUserHandler = () => {
   return {
-    userDetails: {
-      id: 1,
-      firstname: 'Dev',
-      lastname: 'Test',
-      fullname: 'Dev Test',
-      email: 'dev@test.com',
-      profilePic: 'http://test.com/dev/profile.jpg',
-      createAt: '2017-08-30T13:35:00Z',
-      isActive: true
-    }
+    userDetails: data.userTest4
+  };
+};
+
+const setUserRoleHandler = () => {
+  return {
+    userDetails: data.userTest4
   };
 };
 
@@ -89,5 +96,6 @@ export {
   getUserByIdHandler,
   getUsersByIdsHandler,
   getAllUsersHandler,
+  setUserRoleHandler,
   registerUserHandler
 };

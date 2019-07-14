@@ -20,8 +20,15 @@ Mix.prototype.get = async function get(url, configs = {}) {
   return this.realClient.get(url, configs);
 };
 
-Mix.prototype.post = async function post() {
-  throw new Error('Not yet implemented');
+Mix.prototype.post = async function post(url, configs = {}) {
+  const processedUrl = processURL(url, configs);
+  const handler = this.endpoints[processedUrl];
+
+  if (handler) {
+    return this.fakeClient.post(url, configs);
+  }
+
+  return this.realClient.post(url, configs);
 };
 
 Mix.prototype.put = async function put() {

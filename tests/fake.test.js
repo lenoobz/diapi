@@ -16,8 +16,7 @@ describe('Fake modes test suite', () => {
             '/api/v1/users': Fake.getAllUsersHandler,
             '/api/v1/users/1': Fake.getUserByIdHandler,
             '/api/v1/users?uid=0': Fake.getUserByIdHandler,
-            '/api/v1/users?uid=0&uid=1': Fake.getUsersByIdsHandler,
-            '/api/v1/users/register': Fake.registerUserHandler
+            '/api/v1/users?uid=0&uid=1': Fake.getUsersByIdsHandler
           }
         }
       };
@@ -73,7 +72,45 @@ describe('Fake modes test suite', () => {
   });
 
   describe('Fake | POST requests', () => {
-    it('POST | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.FAKE,
+        fake: {
+          delay: DELAY,
+          endpoints: {
+            '/api/v1/users/register': Fake.registerUserHandler
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('POST | with body', async() => {
+      const resp = await api.post('/api/v1/users/register', {
+        body: { ...Fake.data.userTest4 }
+      });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.userTest4 });
+    });
+
+    it('POST | throw with empty config object', async() => {
+      await expect(api.post('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'No handler provided'
+      );
+    });
+
+    it('POST | throw with null config object', async() => {
+      await expect(api.post('/api/v1/pathNotExisted')).rejects.toThrow(
+        'No handler provided'
+      );
+    });
   });
 
   describe('Fake | PUT requests', () => {

@@ -90,7 +90,49 @@ describe('Real client test suite', () => {
   });
 
   describe('Real with Axios | POST requests', () => {
-    it('POST | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.REAL,
+        real: {
+          client: CLIENTS.AXIOS,
+          axios: {
+            instance: axios,
+            accessToken: null,
+            baseURL: 'https://diapi-mock-server.herokuapp.com',
+            paramsSerializer: (params) =>
+              qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('POST | with body', async() => {
+      const resp = await api.post('/api/v1/users/register', {
+        body: { ...Fake.data.userTest4 }
+      });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.userTest4 });
+    }, 15000);
+
+    it('POST | throw with empty config object', async() => {
+      await expect(api.post('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making a POST request'
+      );
+    });
+
+    it('POST | throw with null config object', async() => {
+      await expect(api.post('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making a POST request'
+      );
+    });
   });
 
   describe('Real with Axios | PUT requests', () => {

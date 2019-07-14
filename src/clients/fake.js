@@ -22,7 +22,7 @@ Fake.prototype.get = function get(url, configs = {}) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (handler) {
-        resolve(handler());
+        resolve(handler(configs));
       } else {
         reject(new Error('No handler provided'));
       }
@@ -30,14 +30,15 @@ Fake.prototype.get = function get(url, configs = {}) {
   });
 };
 
-Fake.prototype.post = function post(url /* , configs */) {
+Fake.prototype.post = function post(url, configs = {}) {
+  const processedUrl = processURL(url, configs);
   const { delay, endpoints } = this.defaults;
-  const handler = endpoints[url];
+  const handler = endpoints[processedUrl];
 
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (handler) {
-        resolve(handler());
+        resolve(handler(configs));
       } else {
         reject(new Error('No handler provided'));
       }
