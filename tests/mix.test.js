@@ -46,26 +46,26 @@ describe('Mix modes test suite', () => {
       expect(resp).toStrictEqual({
         users: [Fake.data.userTest0, Fake.data.userTest1, Fake.data.userTest2]
       });
-    });
+    }, 15000);
 
     it('GET | null config object', async() => {
       const resp = await api.get('/api/v1/users');
       expect(resp).toStrictEqual({
         users: [Fake.data.userTest0, Fake.data.userTest1, Fake.data.userTest2]
       });
-    });
+    }, 15000);
 
     it('GET | throw with empty config object', async() => {
       await expect(api.get('/api/v1/pathNotExisted', {})).rejects.toThrow(
         'Error occurred while making a GET request'
       );
-    });
+    }, 15000);
 
     it('GET | throw with null config object', async() => {
       await expect(api.get('/api/v1/pathNotExisted')).rejects.toThrow(
         'Error occurred while making a GET request'
       );
-    });
+    }, 15000);
 
     it('GET | with params', async() => {
       const resp = await api.get('/api/v1/users-filter', {
@@ -134,13 +134,13 @@ describe('Mix modes test suite', () => {
       await expect(api.post('/api/v1/pathNotExisted', {})).rejects.toThrow(
         'Error occurred while making a POST request'
       );
-    });
+    }, 15000);
 
     it('POST | throw with null config object', async() => {
       await expect(api.post('/api/v1/pathNotExisted')).rejects.toThrow(
         'Error occurred while making a POST request'
       );
-    });
+    }, 15000);
   });
 
   describe('Mix with Axios | PUT requests', () => {

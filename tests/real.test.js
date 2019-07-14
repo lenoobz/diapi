@@ -126,13 +126,13 @@ describe('Real client test suite', () => {
       await expect(api.post('/api/v1/pathNotExisted', {})).rejects.toThrow(
         'Error occurred while making a POST request'
       );
-    });
+    }, 15000);
 
     it('POST | throw with null config object', async() => {
       await expect(api.post('/api/v1/pathNotExisted')).rejects.toThrow(
         'Error occurred while making a POST request'
       );
-    });
+    }, 15000);
   });
 
   describe('Real with Axios | PUT requests', () => {
