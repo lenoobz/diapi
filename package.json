@@ -1,7 +1,7 @@
 {
   "name": "diapi",
-  "version": "0.0.1-0",
-  "description": "BxMon API aid util",
+  "version": "0.0.1-1",
+  "description": "API aid util",
   "main": "index.js",
   "scripts": {
     "build": "NODE_ENV=production webpack",
@@ -15,14 +15,17 @@
     "url": "https://github.com/bxmon/diapi.git"
   },
   "keywords": [
-    "BxMon",
     "API",
     "aid",
+    "real",
+    "fake",
+    "mix",
+    "mockup",
     "helper",
     "enhancer",
     "utility"
   ],
-  "author": "BxMon",
+  "author": "bxmon",
   "license": "MIT",
   "homepage": "https://github.com/bxmon/diapi",
   "devDependencies": {
