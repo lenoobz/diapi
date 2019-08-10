@@ -8,18 +8,29 @@ function Axios(opts) {
   this.axios = instance.create(restOpts);
 }
 
-function getHeaderConfigs(conf, accessToken) {
-  const { token } = conf;
-
-  if (token) {
-    return { headers: { Authorization: `bearer ${token}` } };
-  }
+function getHeaderConfigs(conf, token) {
+  let hasHeader = false;
+  let mergeHeaders = {};
+  let authHeader = null;
+  const { accessToken, headers } = conf;
 
   if (accessToken) {
-    return { headers: { Authorization: `bearer ${accessToken}` } };
+    authHeader = { Authorization: `bearer ${accessToken}` };
+  } else if (token) {
+    authHeader = { Authorization: `bearer ${token}` };
   }
 
-  return {};
+  if (authHeader) {
+    hasHeader = true;
+    mergeHeaders = Object.assign(mergeHeaders, authHeader);
+  }
+
+  if (headers) {
+    hasHeader = true;
+    mergeHeaders = Object.assign(mergeHeaders, headers);
+  }
+
+  return hasHeader ? { headers: mergeHeaders } : {};
 }
 
 function getParamConfigs(conf) {
