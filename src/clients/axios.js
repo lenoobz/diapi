@@ -8,63 +8,81 @@ function Axios(opts) {
   this.axios = instance.create(restOpts);
 }
 
-function getHeaderConfigs(conf, token) {
-  let hasHeader = false;
-  let mergeHeaders = {};
+Axios.prototype.getHeaderConfigs = function getHeaderConfigs(headers, token) {
   let authHeader = null;
-  const { accessToken, headers } = conf;
+  const accessToken = token || this.accessToken;
 
   if (accessToken) {
     authHeader = { Authorization: `Bearer ${accessToken}` };
-  } else if (token) {
-    authHeader = { Authorization: `Bearer ${token}` };
   }
 
-  if (authHeader) {
-    hasHeader = true;
-    mergeHeaders = Object.assign(mergeHeaders, authHeader);
-  }
+  return authHeader || headers
+    ? { headers: Object.assign({}, authHeader, headers) }
+    : {};
+};
 
-  if (headers) {
-    hasHeader = true;
-    mergeHeaders = Object.assign(mergeHeaders, headers);
-  }
-
-  return hasHeader ? { headers: mergeHeaders } : {};
-}
-
-function getParamConfigs(conf) {
-  const { params } = conf;
+Axios.prototype.getParamConfigs = function getParamConfigs(params) {
   return params ? { params } : {};
-}
+};
 
+/**
+ * Get request handler
+ * @param {string} url           Endpoint url.
+ * @param {{
+ *            headers:(object | undefined),
+ *            params:(object | undefined),
+ *            accessToken:(string | undefined),
+ *            errorHandler: (function | undefined)
+ *        }} configs             Config object will be used for the request.
+ */
 Axios.prototype.get = async function get(url, configs = {}) {
   try {
-    const params = getParamConfigs(configs);
-    const header = getHeaderConfigs(configs, this.accessToken);
+    const { headers: headersConf, params: paramsConf, accessToken } = configs;
+    const params = this.getParamConfigs(paramsConf);
+    const headers = this.getHeaderConfigs(headersConf, accessToken);
     const resp = await this.axios.get(url, {
       ...this.axiosOpts,
-      ...header,
+      ...headers,
       ...params
     });
     return resp.data ? resp.data : resp;
   } catch (e) {
-    this.errorHandler(e, GENERIC_ERROR_MESSAGE.GET);
+    const { errorHandler } = configs;
+    if (errorHandler) {
+      errorHandler(e);
+    } else {
+      this.errorHandler(e, GENERIC_ERROR_MESSAGE.GET);
+    }
     return null;
   }
 };
 
+/**
+ * Post request handler
+ * @param {string} url           Endpoint url.
+ * @param {{
+  *            headers:(object | undefined),
+  *            body:(object | undefined),
+  *            accessToken:(string | undefined),
+  *            errorHandler: (function | undefined)
+  *        }} configs             Config object will be used for the request.
+  */
 Axios.prototype.post = async function post(url, configs = {}) {
   try {
-    const { body = {} } = configs;
-    const header = getHeaderConfigs(configs);
+    const { headers: headersConf, body = {}, accessToken } = configs;
+    const header = this.getHeaderConfigs(headersConf, accessToken);
     const resp = await this.axios.post(url, body, {
       ...this.axiosOpts,
       ...header
     });
     return resp.data ? resp.data : resp;
   } catch (e) {
-    this.errorHandler(e, GENERIC_ERROR_MESSAGE.POST);
+    const { errorHandler } = configs;
+    if (errorHandler) {
+      errorHandler(e);
+    } else {
+      this.errorHandler(e, GENERIC_ERROR_MESSAGE.POST);
+    }
     return null;
   }
 };
