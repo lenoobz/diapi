@@ -15,9 +15,9 @@ function getHeaderConfigs(conf, token) {
   const { accessToken, headers } = conf;
 
   if (accessToken) {
-    authHeader = { Authorization: `bearer ${accessToken}` };
+    authHeader = { Authorization: `Bearer ${accessToken}` };
   } else if (token) {
-    authHeader = { Authorization: `bearer ${token}` };
+    authHeader = { Authorization: `Bearer ${token}` };
   }
 
   if (authHeader) {
