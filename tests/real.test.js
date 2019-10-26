@@ -21,7 +21,7 @@ describe('Real client test suite', () => {
           client: CLIENTS.AXIOS,
           axios: {
             instance: axios,
-            accessToken: null,
+            bearerToken: null,
             baseURL: 'https://diapi-mock-server.herokuapp.com',
             paramsSerializer: (params) =>
               qs.stringify(params, { arrayFormat: 'repeat' })
@@ -100,7 +100,7 @@ describe('Real client test suite', () => {
           client: CLIENTS.AXIOS,
           axios: {
             instance: axios,
-            accessToken: null,
+            bearerToken: null,
             baseURL: 'https://diapi-mock-server.herokuapp.com',
             paramsSerializer: (params) =>
               qs.stringify(params, { arrayFormat: 'repeat' })

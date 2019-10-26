@@ -1,19 +1,19 @@
 import { GENERIC_ERROR_MESSAGE } from '../consts/constants';
 
 function Axios(opts) {
-  const { instance, accessToken, errorHandler, ...restOpts } = opts;
+  const { instance, bearerToken, errorHandler, ...restOpts } = opts;
   this.axiosOpts = restOpts;
-  this.accessToken = accessToken;
+  this.bearerToken = bearerToken;
   this.errorHandler = errorHandler;
   this.axios = instance.create(restOpts);
 }
 
-Axios.prototype.getHeaderConfigs = function getHeaderConfigs(headers, token) {
+Axios.prototype.extractHeader = function extractHeader(headers, token) {
   let authHeader = null;
-  const accessToken = token || this.accessToken;
+  const bearerToken = token || this.bearerToken;
 
-  if (accessToken) {
-    authHeader = { Authorization: `Bearer ${accessToken}` };
+  if (bearerToken) {
+    authHeader = { Authorization: `Bearer ${bearerToken}` };
   }
 
   return authHeader || headers
@@ -21,7 +21,7 @@ Axios.prototype.getHeaderConfigs = function getHeaderConfigs(headers, token) {
     : {};
 };
 
-Axios.prototype.getParamConfigs = function getParamConfigs(params) {
+Axios.prototype.extractParams = function extractParams(params) {
   return params ? { params } : {};
 };
 
@@ -31,23 +31,32 @@ Axios.prototype.getParamConfigs = function getParamConfigs(params) {
  * @param {{
  *            headers:(object | undefined),
  *            params:(object | undefined),
- *            accessToken:(string | undefined),
+ *            bearerToken:(string | undefined),
  *            errorHandler: (function | undefined)
- *        }} configs             Config object will be used for the request.
+ *        }} payload             Payload object will be used for the request.
  */
-Axios.prototype.get = async function get(url, configs = {}) {
+Axios.prototype.get = async function get(url, payload = {}) {
+  // Extract request detail from payload object
+  const { headers, params, bearerToken, errorHandler } = payload;
+
   try {
-    const { headers: headersConf, params: paramsConf, accessToken } = configs;
-    const params = this.getParamConfigs(paramsConf);
-    const headers = this.getHeaderConfigs(headersConf, accessToken);
+    // Extract parameters
+    const paramOpts = this.extractParams(params);
+
+    // Extract headers
+    const headerOpts = this.extractHeader(headers, bearerToken);
+
+    // Make request
     const resp = await this.axios.get(url, {
       ...this.axiosOpts,
-      ...headers,
-      ...params
+      ...headerOpts,
+      ...paramOpts
     });
+
+    // Return response data
     return resp.data ? resp.data : resp;
   } catch (e) {
-    const { errorHandler } = configs;
+    // If errorHandler is provided use it otherwise use generic error handler
     if (errorHandler) {
       errorHandler(e);
     } else {
@@ -61,23 +70,30 @@ Axios.prototype.get = async function get(url, configs = {}) {
  * Post request handler
  * @param {string} url           Endpoint url.
  * @param {{
-  *            headers:(object | undefined),
-  *            body:(object | undefined),
-  *            accessToken:(string | undefined),
-  *            errorHandler: (function | undefined)
-  *        }} configs             Config object will be used for the request.
-  */
-Axios.prototype.post = async function post(url, configs = {}) {
+ *            headers:(object | undefined),
+ *            body:(object | undefined),
+ *            bearerToken:(string | undefined),
+ *            errorHandler: (function | undefined)
+ *        }} payload             Payload object will be used for the request.
+ */
+Axios.prototype.post = async function post(url, payload = {}) {
+  // Extract request detail from payload object
+  const { headers, body = {}, bearerToken, errorHandler } = payload;
+
   try {
-    const { headers: headersConf, body = {}, accessToken } = configs;
-    const header = this.getHeaderConfigs(headersConf, accessToken);
+    // Extract parameters
+    const headerOpts = this.extractHeader(headers, bearerToken);
+
+    // Make request
     const resp = await this.axios.post(url, body, {
       ...this.axiosOpts,
-      ...header
+      ...headerOpts
     });
+
+    // Return response data
     return resp.data ? resp.data : resp;
   } catch (e) {
-    const { errorHandler } = configs;
+    // If errorHandler is provided use it otherwise use generic error handler
     if (errorHandler) {
       errorHandler(e);
     } else {

@@ -18,7 +18,7 @@ Api Aid Util
     "client": "axios | fetch | ajax",
     "axios": {
       "instance": axios,
-      "accessToken": null,
+      "bearerToken": null,
       "baseURL": "https://example.com/api/v1",
       "errorHandler": null
     },
