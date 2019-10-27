@@ -1,24 +1,23 @@
 import { GENERIC_ERROR_MESSAGE } from '../consts/constants';
 
 function Axios(opts) {
-  const { instance, bearerToken, errorHandler, ...restOpts } = opts;
+  const { instance, headerOpts, bearerToken, errorHandler, ...restOpts } = opts;
   this.axiosOpts = restOpts;
+  this.headerOpts = headerOpts;
   this.bearerToken = bearerToken;
   this.errorHandler = errorHandler;
   this.axios = instance.create(restOpts);
 }
 
-Axios.prototype.extractHeader = function extractHeader(headers, token) {
-  let authHeader = null;
-  const bearerToken = token || this.bearerToken;
+Axios.prototype.extractHeader = function extractHeader(headerOpts, bearerToken = null) {
+  const accessToken = bearerToken || this.bearerToken;
+  let headers = Object.assign({}, this.headerOpts, headerOpts);
 
-  if (bearerToken) {
-    authHeader = { Authorization: `Bearer ${bearerToken}` };
+  if (accessToken) {
+    headers = Object.assign(headers, { Authorization: `Bearer ${accessToken}` });
   }
 
-  return authHeader || headers
-    ? { headers: Object.assign({}, authHeader, headers) }
-    : {};
+  return headers;
 };
 
 Axios.prototype.extractParams = function extractParams(params) {
