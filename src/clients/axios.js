@@ -9,15 +9,20 @@ function Axios(opts) {
   this.axios = instance.create(restOpts);
 }
 
-Axios.prototype.extractHeader = function extractHeader(headerOpts, bearerToken = null) {
+Axios.prototype.extractHeader = function extractHeader(
+  headerOpts,
+  bearerToken = null
+) {
   const accessToken = bearerToken || this.bearerToken;
   let headers = Object.assign({}, this.headerOpts, headerOpts);
 
   if (accessToken) {
-    headers = Object.assign(headers, { Authorization: `Bearer ${accessToken}` });
+    headers = Object.assign(headers, {
+      Authorization: `Bearer ${accessToken}`
+    });
   }
 
-  return headers;
+  return { headers };
 };
 
 Axios.prototype.extractParams = function extractParams(params) {
