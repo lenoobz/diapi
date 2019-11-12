@@ -9,46 +9,66 @@ function Mix(fakeOpts, realOpts) {
   this.realClient = initRealClient(realOpts);
 }
 
-Mix.prototype.get = async function get(url, configs = {}) {
-  const processedUrl = processURL(url, configs);
-  const handler = this.endpoints[processedUrl];
+Mix.prototype.mutualRequest = function mutualRequest(method) {
+  return async function request(url, configs = {}) {
+    const processedUrl = processURL(url, configs);
+    const handler = this.endpoints[processedUrl];
 
-  if (handler) {
-    return this.fakeClient.get(url, configs);
-  }
+    if (handler) {
+      return this.fakeClient[method](url, configs);
+    }
 
-  return this.realClient.get(url, configs);
+    return this.realClient[method](url, configs);
+  };
 };
 
-Mix.prototype.post = async function post(url, configs = {}) {
-  const processedUrl = processURL(url, configs);
-  const handler = this.endpoints[processedUrl];
+/**
+ * Handle http get request with mix mode
+ * @param {string} url
+ * @param {object} configs
+ */
+Mix.prototype.get = Mix.prototype.mutualRequest('get');
 
-  if (handler) {
-    return this.fakeClient.post(url, configs);
-  }
+/**
+ * Handle http post request with mix mode
+ * @param {string} url
+ * @param {object} configs
+ */
+Mix.prototype.post = Mix.prototype.mutualRequest('post');
 
-  return this.realClient.post(url, configs);
-};
+/**
+ * Handle http put request with mix mode
+ * @param {string} url
+ * @param {object} configs
+ */
+Mix.prototype.put = Mix.prototype.mutualRequest('put');
 
-Mix.prototype.put = async function put() {
-  throw new Error('Not yet implemented');
-};
+/**
+ * Handle http patch request with mix mode
+ * @param {string} url
+ * @param {object} configs
+ */
+Mix.prototype.patch = Mix.prototype.mutualRequest('patch');
 
-Mix.prototype.patch = async function patch() {
-  throw new Error('Not yet implemented');
-};
+/**
+ * Handle http head request with mix mode
+ * @param {string} url
+ * @param {object} configs
+ */
+Mix.prototype.head = Mix.prototype.mutualRequest('head');
 
-Mix.prototype.head = async function head() {
-  throw new Error('Not yet implemented');
-};
+/**
+ * Handle http options request with mix mode
+ * @param {string} url
+ * @param {object} configs
+ */
+Mix.prototype.options = Mix.prototype.mutualRequest('options');
 
-Mix.prototype.options = async function options() {
-  throw new Error('Not yet implemented');
-};
-
-Mix.prototype.delete = async function deleteMethod() {
-  throw new Error('Not yet implemented');
-};
+/**
+ * Handle http delete request with mix mode
+ * @param {string} url
+ * @param {object} configs
+ */
+Mix.prototype.delete = Mix.prototype.mutualRequest('delete');
 
 export default Mix;

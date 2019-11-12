@@ -111,8 +111,41 @@ Axios.prototype.put = function put() {
   throw new Error('Not yet implemented');
 };
 
-Axios.prototype.patch = function path() {
-  throw new Error('Not yet implemented');
+/**
+ * Patch request handler
+ * @param {string} url           Endpoint url.
+ * @param {{
+  *            headers:(object | undefined),
+  *            body:(object | undefined),
+  *            bearerToken:(string | undefined),
+  *            errorHandler: (function | undefined)
+  *        }} payload             Payload object will be used for the request.
+  */
+Axios.prototype.patch = async function path(url, payload = {}) {
+  // Extract request detail from payload object
+  const { headers, body = {}, bearerToken, errorHandler } = payload;
+
+  try {
+    // Extract parameters
+    const headerOpts = this.extractHeader(headers, bearerToken);
+
+    // Make request
+    const resp = await this.axios.patch(url, body, {
+      ...this.axiosOpts,
+      ...headerOpts
+    });
+
+    // Return response data
+    return resp.data ? resp.data : resp;
+  } catch (e) {
+    // If errorHandler is provided use it otherwise use generic error handler
+    if (errorHandler) {
+      errorHandler(e);
+    } else {
+      this.errorHandler(e, GENERIC_ERROR_MESSAGE.PATCH);
+    }
+    return null;
+  }
 };
 
 Axios.prototype.head = function head() {

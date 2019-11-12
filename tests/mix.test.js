@@ -148,7 +148,62 @@ describe('Mix modes test suite', () => {
   });
 
   describe('Mix with Axios | PATCH requests', () => {
-    it('PATCH | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.MIX,
+        fake: {
+          delay: DELAY,
+          endpoints: {
+            '/api/v1/users/patchUser': Fake.patchUserInfoHandler
+          }
+        },
+        real: {
+          client: CLIENTS.AXIOS,
+          axios: {
+            instance: axios,
+            bearerToken: null,
+            baseURL: 'https://diapi-mock-server.herokuapp.com',
+            paramsSerializer: (params) =>
+              qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('PATCH | register user call real endpoint', async() => {
+      const resp = await api.patch('/api/v1/users/1', {
+        body: { ...Fake.data.userTest4 }
+      });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.userTest4 });
+    }, 15000);
+
+    it('PATCH | set user role call fake endpoint', async() => {
+      const resp = await api.patch('/api/v1/users/patchUser', {
+        body: { lastname: 'Test Patch', fullname: 'Dev 4 Test Patch' }
+      });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.patchUserTest4 });
+    }, 15000);
+
+    it('PATCH | throw with empty config object', async() => {
+      await expect(api.patch('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making a PATCH request'
+      );
+    });
+
+    it('PATCH | throw with null config object', async() => {
+      await expect(api.patch('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making a PATCH request'
+      );
+    });
   });
 
   describe('Mix with Axios | HEAD requests', () => {

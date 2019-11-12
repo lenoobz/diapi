@@ -118,7 +118,45 @@ describe('Fake modes test suite', () => {
   });
 
   describe('Fake | PATCH requests', () => {
-    it('PATCH | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.FAKE,
+        fake: {
+          delay: DELAY,
+          endpoints: {
+            '/api/v1/users/patchUser': Fake.patchUserInfoHandler
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('PATCH | with body', async() => {
+      const resp = await api.post('/api/v1/users/patchUser', {
+        body: { lastname: 'Test Patch', fullname: 'Dev 4 Test Patch' }
+      });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.patchUserTest4 });
+    });
+
+    it('PATCH | throw with empty config object', async() => {
+      await expect(api.patch('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'No handler provided'
+      );
+    });
+
+    it('PATCH | throw with null config object', async() => {
+      await expect(api.patch('/api/v1/pathNotExisted')).rejects.toThrow(
+        'No handler provided'
+      );
+    });
   });
 
   describe('Fake | HEAD requests', () => {
