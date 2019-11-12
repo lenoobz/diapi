@@ -144,7 +144,62 @@ describe('Mix modes test suite', () => {
   });
 
   describe('Mix with Axios | PUT requests', () => {
-    it('PUT | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.MIX,
+        fake: {
+          delay: DELAY,
+          endpoints: {
+            '/api/v1/users/0': Fake.getUserByIdHandler
+          }
+        },
+        real: {
+          client: CLIENTS.AXIOS,
+          axios: {
+            instance: axios,
+            bearerToken: null,
+            baseURL: 'https://diapi-mock-server.herokuapp.com',
+            paramsSerializer: (params) =>
+              qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('PUT | register user call real endpoint', async() => {
+      const resp = await api.put('/api/v1/users/2', {
+        body: { ...Fake.data.userTest2 }
+      });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.userTest2 });
+    }, 15000);
+
+    it('PUT | set user role call fake endpoint', async() => {
+      const resp = await api.put('/api/v1/users/0', {
+        body: { ...Fake.data.userTest0 }
+      });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.userTest0 });
+    }, 15000);
+
+    it('PUT | throw with empty config object', async() => {
+      await expect(api.put('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making a PUT request'
+      );
+    });
+
+    it('PUT | throw with null config object', async() => {
+      await expect(api.put('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making a PUT request'
+      );
+    });
   });
 
   describe('Mix with Axios | PATCH requests', () => {
