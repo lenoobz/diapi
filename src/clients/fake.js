@@ -10,60 +10,74 @@ function Fake(opts) {
 }
 
 /**
+ * Mutual request is called by all fake request. All fake requests
+ * are basically the same. They are all return a promise.
+ * @param {string} url
+ * @param {object} configs
+ */
+Fake.prototype.mutualRequest = function request(url, configs = {}) {
+  const processedUrl = processURL(url, configs);
+  const { delay, endpoints } = this.defaults;
+  const handler = endpoints[processedUrl];
+
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (handler) {
+        resolve(handler(configs));
+      } else {
+        reject(new Error('No handler provided'));
+      }
+    }, delay);
+  });
+};
+
+/**
  * Get method mimics http get request
  * @param {string} url
  * @param {object} configs
  */
-Fake.prototype.get = function get(url, configs = {}) {
-  const processedUrl = processURL(url, configs);
-  const { delay, endpoints } = this.defaults;
-  const handler = endpoints[processedUrl];
+Fake.prototype.get = Fake.prototype.mutualRequest;
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (handler) {
-        resolve(handler(configs));
-      } else {
-        reject(new Error('No handler provided'));
-      }
-    }, delay);
-  });
-};
+/**
+ * Post method mimics http post request
+ * @param {string} url
+ * @param {object} configs
+ */
+Fake.prototype.post = Fake.prototype.mutualRequest;
 
-Fake.prototype.post = function post(url, configs = {}) {
-  const processedUrl = processURL(url, configs);
-  const { delay, endpoints } = this.defaults;
-  const handler = endpoints[processedUrl];
+/**
+ * Put method mimics http put request
+ * @param {string} url
+ * @param {object} configs
+ */
+Fake.prototype.put = Fake.prototype.mutualRequest;
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (handler) {
-        resolve(handler(configs));
-      } else {
-        reject(new Error('No handler provided'));
-      }
-    }, delay);
-  });
-};
+/**
+ * Patch method mimics http patch request
+ * @param {string} url
+ * @param {object} configs
+ */
+Fake.prototype.patch = Fake.prototype.mutualRequest;
 
-Fake.prototype.put = function put() {
-  throw new Error('Not yet implemented');
-};
+/**
+ * Head method mimics http head request
+ * @param {string} url
+ * @param {object} configs
+ */
+Fake.prototype.head = Fake.prototype.mutualRequest;
 
-Fake.prototype.patch = function patch() {
-  throw new Error('Not yet implemented');
-};
+/**
+ * Options method mimics http options request
+ * @param {string} url
+ * @param {object} configs
+ */
+Fake.prototype.options = Fake.prototype.mutualRequest;
 
-Fake.prototype.head = function head() {
-  throw new Error('Not yet implemented');
-};
-
-Fake.prototype.options = function options() {
-  throw new Error('Not yet implemented');
-};
-
-Fake.prototype.delete = function deleteMethod() {
-  throw new Error('Not yet implemented');
-};
+/**
+ * Delete method mimics http delete request
+ * @param {string} url
+ * @param {object} configs
+ */
+Fake.prototype.delete = Fake.prototype.mutualRequest;
 
 export default Fake;

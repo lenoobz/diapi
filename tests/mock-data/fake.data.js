@@ -51,6 +51,16 @@ const data = {
     profilePic: 'http://test.com/dev4/profile.jpg',
     createAt: '2017-08-30T13:35:00Z',
     isActive: true
+  },
+  patchUserTest4: {
+    id: 4,
+    firstname: 'Dev 4',
+    lastname: 'Test Patch',
+    fullname: 'Dev 4 Test Patch',
+    email: 'dev4@test.com',
+    profilePic: 'http://test.com/dev4/profile.jpg',
+    createAt: '2017-08-30T13:35:00Z',
+    isActive: true
   }
 };
 
@@ -91,11 +101,22 @@ const setUserRoleHandler = () => {
   };
 };
 
+/** ****************************************************************************
+ * Fake patch handlers
+ ******************************************************************************/
+
+const patchUserInfoHandler = () => {
+  return {
+    userDetails: data.patchUserTest4
+  };
+};
+
 export {
   data,
   getUserByIdHandler,
   getUsersByIdsHandler,
   getAllUsersHandler,
   setUserRoleHandler,
-  registerUserHandler
+  registerUserHandler,
+  patchUserInfoHandler
 };
