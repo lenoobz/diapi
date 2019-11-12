@@ -107,8 +107,41 @@ Axios.prototype.post = async function post(url, payload = {}) {
   }
 };
 
-Axios.prototype.put = function put() {
-  throw new Error('Not yet implemented');
+/**
+ * Put request handler
+ * @param {string} url           Endpoint url.
+ * @param {{
+  *            headers:(object | undefined),
+  *            body:(object | undefined),
+  *            bearerToken:(string | undefined),
+  *            errorHandler: (function | undefined)
+  *        }} payload             Payload object will be used for the request.
+  */
+Axios.prototype.put = async function put(url, payload = {}) {
+  // Extract request detail from payload object
+  const { headers, body = {}, bearerToken, errorHandler } = payload;
+
+  try {
+    // Extract parameters
+    const headerOpts = this.extractHeader(headers, bearerToken);
+
+    // Make request
+    const resp = await this.axios.put(url, body, {
+      ...this.axiosOpts,
+      ...headerOpts
+    });
+
+    // Return response data
+    return resp.data ? resp.data : resp;
+  } catch (e) {
+    // If errorHandler is provided use it otherwise use generic error handler
+    if (errorHandler) {
+      errorHandler(e);
+    } else {
+      this.errorHandler(e, GENERIC_ERROR_MESSAGE.PUT);
+    }
+    return null;
+  }
 };
 
 /**
