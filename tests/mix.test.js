@@ -261,11 +261,175 @@ describe('Mix modes test suite', () => {
     });
   });
 
+  describe('Mix with Axios | DELETE requests', () => {
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.MIX,
+        fake: {
+          delay: DELAY,
+          endpoints: {
+            '/api/v1/users/4': Fake.deleteUserInfoHandler
+          }
+        },
+        real: {
+          client: CLIENTS.AXIOS,
+          axios: {
+            instance: axios,
+            bearerToken: null,
+            baseURL: 'https://diapi-mock-server.herokuapp.com',
+            paramsSerializer: (params) =>
+              qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('DELETE | register user call real endpoint', async() => {
+      const resp = await api.delete('/api/v1/users/1');
+      expect(resp).toStrictEqual({ 'message': 'Success' });
+    }, 15000);
+
+    it('POST | register user call real endpoint', async() => {
+      const resp = await api.post('/api/v1/users/register', {
+        body: { ...Fake.data.userTest1 }
+      });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.userTest1 });
+    }, 15000);
+
+    it('DELETE | set user role call fake endpoint', async() => {
+      const resp = await api.delete('/api/v1/users/4');
+      expect(resp).toStrictEqual({ 'message': 'Success' });
+    }, 15000);
+
+    it('DELETE | throw with empty config object', async() => {
+      await expect(api.delete('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making a DELETE request'
+      );
+    });
+
+    it('DELETE | throw with null config object', async() => {
+      await expect(api.delete('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making a DELETE request'
+      );
+    });
+  });
+
   describe('Mix with Axios | HEAD requests', () => {
-    it('HEAD | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.MIX,
+        fake: {
+          delay: DELAY,
+          endpoints: {
+            '/api/v1/users/statusFake': Fake.statusUserHandler
+          }
+        },
+        real: {
+          client: CLIENTS.AXIOS,
+          axios: {
+            instance: axios,
+            bearerToken: null,
+            baseURL: 'https://diapi-mock-server.herokuapp.com',
+            paramsSerializer: (params) =>
+              qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('HEAD | register user call real endpoint', async() => {
+      const resp = await api.head('/api/v1/users/status');
+      expect(resp).toHaveProperty('content-length');
+    }, 15000);
+
+    it('HEAD | set user role call fake endpoint', async() => {
+      const resp = await api.head('/api/v1/users/statusFake');
+      expect(resp).toBeUndefined();
+    }, 15000);
+
+    it('HEAD | throw with empty config object', async() => {
+      await expect(api.head('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making a HEAD request'
+      );
+    });
+
+    it('HEAD | throw with null config object', async() => {
+      await expect(api.head('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making a HEAD request'
+      );
+    });
   });
 
   describe('Mix with Axios | OPTIONS requests', () => {
-    it('OPTIONS | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.MIX,
+        fake: {
+          delay: DELAY,
+          endpoints: {
+            '/api/v1/users/4': Fake.optionsHandler
+          }
+        },
+        real: {
+          client: CLIENTS.AXIOS,
+          axios: {
+            instance: axios,
+            bearerToken: null,
+            baseURL: 'https://diapi-mock-server.herokuapp.com',
+            paramsSerializer: (params) =>
+              qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('OPTIONS | register user call real endpoint', async() => {
+      const resp = await api.options('/api/v1/users/2');
+      expect(resp).toHaveProperty('access-control-allow-headers');
+    }, 15000);
+
+    it('OPTIONS | set user role call fake endpoint', async() => {
+      const resp = await api.options('/api/v1/users/4');
+      expect(resp).toBeUndefined();
+    }, 15000);
+
+    it('OPTIONS | throw with empty config object', async() => {
+      await expect(api.options('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making OPTIONS request'
+      );
+    });
+
+    it('OPTIONS | throw with null config object', async() => {
+      await expect(api.options('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making OPTIONS request'
+      );
+    });
   });
 });

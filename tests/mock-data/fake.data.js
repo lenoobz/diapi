@@ -111,6 +111,30 @@ const patchUserInfoHandler = () => {
   };
 };
 
+/** ****************************************************************************
+ * Fake delete handlers
+ ******************************************************************************/
+
+const deleteUserInfoHandler = () => {
+  return { 'message': 'Success' };
+};
+
+/** ****************************************************************************
+ * Fake head handlers
+ ******************************************************************************/
+
+const statusUserHandler = () => {
+  return;
+};
+
+/** ****************************************************************************
+ * Fake options handlers
+ ******************************************************************************/
+
+const optionsHandler = () => {
+  return;
+};
+
 export {
   data,
   getUserByIdHandler,
@@ -118,5 +142,8 @@ export {
   getAllUsersHandler,
   setUserRoleHandler,
   registerUserHandler,
-  patchUserInfoHandler
+  patchUserInfoHandler,
+  deleteUserInfoHandler,
+  statusUserHandler,
+  optionsHandler
 };
