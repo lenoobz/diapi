@@ -197,11 +197,125 @@ describe('Fake modes test suite', () => {
     });
   });
 
+  describe('Fake | DELETE requests', () => {
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.FAKE,
+        fake: {
+          delay: DELAY,
+          endpoints: {
+            '/api/v1/users/4': Fake.deleteUserInfoHandler
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('DELETE | with body', async() => {
+      const resp = await api.delete('/api/v1/users/4', {
+        body: { ...Fake.data.userTest4 }
+      });
+      expect(resp).toStrictEqual({ 'message': 'Success' });
+    });
+
+    it('DELETE | throw with empty config object', async() => {
+      await expect(api.delete('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'No handler provided'
+      );
+    });
+
+    it('DELETE | throw with null config object', async() => {
+      await expect(api.delete('/api/v1/pathNotExisted')).rejects.toThrow(
+        'No handler provided'
+      );
+    });
+  });
+
   describe('Fake | HEAD requests', () => {
-    it('HEAD | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.FAKE,
+        fake: {
+          delay: DELAY,
+          endpoints: {
+            '/api/v1/users/status': Fake.statusUserHandler
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('HEAD | with body', async() => {
+      const resp = await api.head('/api/v1/users/status');
+      expect(resp).toBeUndefined();
+    });
+
+    it('HEAD | throw with empty config object', async() => {
+      await expect(api.head('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'No handler provided'
+      );
+    });
+
+    it('HEAD | throw with null config object', async() => {
+      await expect(api.head('/api/v1/pathNotExisted')).rejects.toThrow(
+        'No handler provided'
+      );
+    });
   });
 
   describe('Fake | OPTIONS requests', () => {
-    it('OPTIONS | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.FAKE,
+        fake: {
+          delay: DELAY,
+          endpoints: {
+            '/api/v1/users/4': Fake.optionsHandler
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('OPTIONS | with body', async() => {
+      const resp = await api.options('/api/v1/users/4');
+      expect(resp).toBeUndefined();
+    });
+
+    it('OPTIONS | throw with empty config object', async() => {
+      await expect(api.options('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'No handler provided'
+      );
+    });
+
+    it('OPTIONS | throw with null config object', async() => {
+      await expect(api.options('/api/v1/pathNotExisted')).rejects.toThrow(
+        'No handler provided'
+      );
+    });
   });
 });

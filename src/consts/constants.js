@@ -17,8 +17,9 @@ const GENERIC_ERROR_MESSAGE = {
   GET: 'Error occurred while making a GET request',
   PATCH: 'Error occurred while making a PATCH request',
   PUT: 'Error occurred while making a PUT request',
+  DELETE: 'Error occurred while making a DELETE request',
   HEAD: 'Error occurred while making a HEAD request',
-  OPTIONS: 'Error occurred while making a OPTIONS request'
+  OPTIONS: 'Error occurred while making OPTIONS request'
 };
 
 export { MODES, CLIENTS, DELAY, GENERIC_ERROR_MESSAGE };

@@ -136,18 +136,233 @@ describe('Real client test suite', () => {
   });
 
   describe('Real with Axios | PUT requests', () => {
-    it('PUT | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.REAL,
+        real: {
+          client: CLIENTS.AXIOS,
+          axios: {
+            instance: axios,
+            bearerToken: null,
+            baseURL: 'https://diapi-mock-server.herokuapp.com',
+            paramsSerializer: (params) =>
+              qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('PUT | with body', async() => {
+      const resp = await api.put('/api/v1/users/4', {
+        body: { ...Fake.data.userTest4 }
+      });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.userTest4 });
+    }, 15000);
+
+    it('PUT | throw with empty config object', async() => {
+      await expect(api.put('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making a PUT request'
+      );
+    });
+
+    it('PUT | throw with null config object', async() => {
+      await expect(api.put('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making a PUT request'
+      );
+    });
   });
 
   describe('Real with Axios | PATCH requests', () => {
-    it('PATCH | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.REAL,
+        real: {
+          client: CLIENTS.AXIOS,
+          axios: {
+            instance: axios,
+            bearerToken: null,
+            baseURL: 'https://diapi-mock-server.herokuapp.com',
+            paramsSerializer: (params) =>
+              qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('PATCH | with body', async() => {
+      const resp = await api.patch('/api/v1/users/4', {
+        body: { ...Fake.data.userTest4 }
+      });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.userTest4 });
+    }, 15000);
+
+    it('PATCH | throw with empty config object', async() => {
+      await expect(api.patch('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making a PATCH request'
+      );
+    });
+
+    it('PATCH | throw with null config object', async() => {
+      await expect(api.patch('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making a PATCH request'
+      );
+    });
+  });
+
+  describe('Real with Axios | DELETE requests', () => {
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.REAL,
+        real: {
+          client: CLIENTS.AXIOS,
+          axios: {
+            instance: axios,
+            bearerToken: null,
+            baseURL: 'https://diapi-mock-server.herokuapp.com',
+            paramsSerializer: (params) =>
+              qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('DELETE | with body', async() => {
+      const resp = await api.delete('/api/v1/users/4');
+      expect(resp).toStrictEqual({ 'message': 'Success' });
+    }, 15000);
+
+    it('POST | register user call real endpoint', async() => {
+      const resp = await api.post('/api/v1/users/register', {
+        body: { ...Fake.data.userTest4 }
+      });
+      expect(resp).toStrictEqual({ userDetails: Fake.data.userTest4 });
+    }, 15000);
+
+    it('DELETE | throw with empty config object', async() => {
+      await expect(api.delete('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making a DELETE request'
+      );
+    });
+
+    it('DELETE | throw with null config object', async() => {
+      await expect(api.delete('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making a DELETE request'
+      );
+    });
   });
 
   describe('Real with Axios | HEAD requests', () => {
-    it('HEAD | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.REAL,
+        real: {
+          client: CLIENTS.AXIOS,
+          axios: {
+            instance: axios,
+            bearerToken: null,
+            baseURL: 'https://diapi-mock-server.herokuapp.com',
+            paramsSerializer: (params) =>
+              qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('HEAD | with body', async() => {
+      const resp = await api.head('/api/v1/users/status');
+      expect(resp).toHaveProperty('content-length');
+    }, 15000);
+
+    it('HEAD | throw with empty config object', async() => {
+      await expect(api.head('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making a HEAD request'
+      );
+    });
+
+    it('HEAD | throw with null config object', async() => {
+      await expect(api.head('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making a HEAD request'
+      );
+    });
   });
 
   describe('Real with Axios | OPTIONS requests', () => {
-    it('OPTIONS | Happy path', async() => {});
+    // Applies only to tests in this describe block
+    let api = null;
+    let opts = null;
+    beforeEach(() => {
+      opts = {
+        mode: MODES.REAL,
+        real: {
+          client: CLIENTS.AXIOS,
+          axios: {
+            instance: axios,
+            bearerToken: null,
+            baseURL: 'https://diapi-mock-server.herokuapp.com',
+            paramsSerializer: (params) =>
+              qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      };
+      api = createDiapi(opts);
+    });
+
+    afterEach(() => {
+      api = null;
+      opts = null;
+    });
+
+    it('OPTIONS | with body', async() => {
+      const resp = await api.options('/api/v1/users/4');
+      expect(resp).toHaveProperty('access-control-allow-headers');
+    }, 15000);
+
+    it('OPTIONS | throw with empty config object', async() => {
+      await expect(api.options('/api/v1/pathNotExisted', {})).rejects.toThrow(
+        'Error occurred while making OPTIONS request'
+      );
+    });
+
+    it('OPTIONS | throw with null config object', async() => {
+      await expect(api.options('/api/v1/pathNotExisted')).rejects.toThrow(
+        'Error occurred while making OPTIONS request'
+      );
+    });
   });
 });

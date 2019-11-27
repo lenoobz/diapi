@@ -181,16 +181,112 @@ Axios.prototype.patch = async function path(url, payload = {}) {
   }
 };
 
-Axios.prototype.head = function head() {
-  throw new Error('Not yet implemented');
+/**
+ * Delete request handler
+ * @param {string} url           Endpoint url.
+ * @param {{
+  *            headers:(object | undefined),
+  *            body:(object | undefined),
+  *            bearerToken:(string | undefined),
+  *            errorHandler: (function | undefined)
+  *        }} payload             Payload object will be used for the request.
+  */
+Axios.prototype.delete = async function deleteMethod(url, payload = {}) {
+  // Extract request detail from payload object
+  const { headers, body = {}, bearerToken, errorHandler } = payload;
+
+  try {
+    // Extract parameters
+    const headerOpts = this.extractHeader(headers, bearerToken);
+
+    // Make request
+    const resp = await this.axios.delete(url, {data: { ...body }, ...headerOpts, ...this.axiosOpts});
+
+    // Return response data
+    return resp.data ? resp.data : resp;
+  } catch (e) {
+    // If errorHandler is provided use it otherwise use generic error handler
+    if (errorHandler) {
+      errorHandler(e);
+    } else {
+      this.errorHandler(e, GENERIC_ERROR_MESSAGE.DELETE);
+    }
+    return null;
+  }
 };
 
-Axios.prototype.options = function options() {
-  throw new Error('Not yet implemented');
+/**
+ * Head request handler
+ * @param {string} url           Endpoint url.
+ * @param {{
+  *            headers:(object | undefined),
+  *            body:(object | undefined),
+  *            bearerToken:(string | undefined),
+  *            errorHandler: (function | undefined)
+  *        }} payload             Payload object will be used for the request.
+  */
+Axios.prototype.head = async function head(url, payload = {}) {
+  // Extract request detail from payload object
+  const { headers, body = {}, bearerToken, errorHandler } = payload;
+
+  try {
+    // Extract parameters
+    const headerOpts = this.extractHeader(headers, bearerToken);
+
+    // Make request
+    const resp = await this.axios.head(url, body, {
+      ...this.axiosOpts,
+      ...headerOpts
+    });
+
+    // Return response data
+    return resp.headers ? resp.headers : null;
+  } catch (e) {
+    // If errorHandler is provided use it otherwise use generic error handler
+    if (errorHandler) {
+      errorHandler(e);
+    } else {
+      this.errorHandler(e, GENERIC_ERROR_MESSAGE.HEAD);
+    }
+    return null;
+  }
 };
 
-Axios.prototype.delete = function deleteMethod() {
-  throw new Error('Not yet implemented');
+/**
+ * Options request handler
+ * @param {string} url           Endpoint url.
+ * @param {{
+  *            headers:(object | undefined),
+  *            body:(object | undefined),
+  *            bearerToken:(string | undefined),
+  *            errorHandler: (function | undefined)
+  *        }} payload             Payload object will be used for the request.
+  */
+Axios.prototype.options = async function options(url, payload = {}) {
+  // Extract request detail from payload object
+  const { headers, body = {}, bearerToken, errorHandler } = payload;
+
+  try {
+    // Extract parameters
+    const headerOpts = this.extractHeader(headers, bearerToken);
+
+    // Make request
+    const resp = await this.axios.options(url, body, {
+      ...this.axiosOpts,
+      ...headerOpts
+    });
+
+    // Return response data
+    return resp.headers ? resp.headers : null;
+  } catch (e) {
+    // If errorHandler is provided use it otherwise use generic error handler
+    if (errorHandler) {
+      errorHandler(e);
+    } else {
+      this.errorHandler(e, GENERIC_ERROR_MESSAGE.OPTIONS);
+    }
+    return null;
+  }
 };
 
 export default Axios;
