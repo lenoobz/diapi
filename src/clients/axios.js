@@ -200,10 +200,7 @@ Axios.prototype.delete = async function deleteMethod(url, payload = {}) {
     const headerOpts = this.extractHeader(headers, bearerToken);
 
     // Make request
-    const resp = await this.axios.delete(url, body, {
-      ...this.axiosOpts,
-      ...headerOpts
-    });
+    const resp = await this.axios.delete(url, {data: { ...body }, ...headerOpts, ...this.axiosOpts});
 
     // Return response data
     return resp.data ? resp.data : resp;
